@@ -1,19 +1,21 @@
 import telebot
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-TOKEN = "8013649463:AAEos0rQfQS6S-6QDpLRPgxTtF7IT2_cQrY"
+TOKEN = "8013649463:AAFL18RrQ7PiVKA-kcFznIilIVzhsNoBEDA"
 OWNER_ID = 6484788124  # Apna Telegram ID yaha dale
 bot = telebot.TeleBot(TOKEN)
 
 # Dictionary to store user channels and cloned bots
 user_channels = {}
 cloned_bots = {}
+user_posts = {}
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add("📢 Set Channel", "📝 Create Post")
     markup.add("🛠 Clone Bot", "📖 Help")
+    markup.add("📡 Broadcast")
     bot.send_message(
         message.chat.id,
         "👋 Welcome! Yeh bot aapke channel ke liye posts manage karega.\n\nUse the buttons below to navigate.",
@@ -24,7 +26,7 @@ def start_message(message):
 def help_message(message):
     bot.send_message(
         message.chat.id,
-        "Commands:\n📢 Set Channel - Channel set kare\n📝 Create Post - Naya post banaye\n🛠 Clone Bot - Bot clone kare\n📢 Broadcast - Sabke channels me message bheje"
+        "Commands:\n📢 Set Channel - Channel set kare\n📝 Create Post - Naya post banaye\n🛠 Clone Bot - Bot clone kare\n📡 Broadcast - Sabke channels me message bheje"
     )
 
 @bot.message_handler(func=lambda message: message.text == "📢 Set Channel")
@@ -42,14 +44,48 @@ def create_post(message):
     bot.register_next_step_handler(message, process_post)
 
 def process_post(message):
+    user_posts[message.chat.id] = {"text": "", "photo": "", "buttons": []}
     if message.content_type == 'photo':
         file_id = message.photo[-1].file_id
         caption = message.caption if message.caption else ""
-        bot.send_photo(message.chat.id, file_id, caption=caption)
+        user_posts[message.chat.id]["photo"] = file_id
+        user_posts[message.chat.id]["text"] = caption
     elif message.content_type == 'text':
-        bot.send_message(message.chat.id, message.text)
+        user_posts[message.chat.id]["text"] = message.text
     else:
         bot.send_message(message.chat.id, "⚠️ Sirf text ya image bheje.")
+        return
+    bot.send_message(message.chat.id, "➕ Inline button add karna hai? /addbutton use kare")
+
+@bot.message_handler(commands=['addbutton'])
+def add_inline_button(message):
+    bot.send_message(message.chat.id, "🔘 Button ka text bheje")
+    bot.register_next_step_handler(message, get_button_text)
+
+def get_button_text(message):
+    button_text = message.text
+    bot.send_message(message.chat.id, "🔗 Button ka link bheje")
+    bot.register_next_step_handler(message, lambda msg: save_button(msg, button_text))
+
+def save_button(message, button_text):
+    button_url = message.text
+    user_posts[message.chat.id]["buttons"].append((button_text, button_url))
+    bot.send_message(message.chat.id, "✅ Button add ho gaya! /addbutton use kare aur add karne ke liye ya /sendpost use kare post bhejne ke liye")
+
+@bot.message_handler(commands=['sendpost'])
+def send_post(message):
+    if message.chat.id not in user_posts:
+        bot.send_message(message.chat.id, "⚠️ Pehle post banaye! /createpost")
+        return
+    post = user_posts[message.chat.id]
+    markup = InlineKeyboardMarkup()
+    for text, url in post["buttons"]:
+        markup.add(InlineKeyboardButton(text, url=url))
+    if post["photo"]:
+        bot.send_photo(user_channels[message.chat.id], post["photo"], caption=post["text"], reply_markup=markup)
+    else:
+        bot.send_message(user_channels[message.chat.id], post["text"], reply_markup=markup)
+    bot.send_message(message.chat.id, "✅ Post bhej diya gaya hai!")
 
 @bot.message_handler(func=lambda message: message.text == "🛠 Clone Bot")
 def clone_bot(message):
