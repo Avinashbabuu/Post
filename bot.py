@@ -1,15 +1,10 @@
 import telebot
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 TOKEN = "8013649463:AAFAqEoo5FjzWLWjpwHfU9OmrrDzQrVSkMM"
 bot = telebot.TeleBot(TOKEN)
 
 admin_id = 6484788124  # Replace with your Telegram ID
-
-# Store user posts temporarily
-user_posts = {}
-selected_channel = {}
-added_channels = []
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -23,16 +18,17 @@ def send_welcome(message):
     welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
     welcome_text += "🔥 **ᴇxᴘᴇʀɪᴇɴᴄᴇ ᴛʜᴇ ꜰᴀsᴛᴇsᴛ ᴘᴏsᴛɪɴɢ ʙᴏᴛ ᴇᴠᴇʀ!** 🔥"
 
-    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
+    # Create a keyboard
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
+    markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
 
-markup = ReplyKeyboardMarkup(resize_keyboard=True)
-markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
-markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
+    # Only add "Broadcast" button for admin
+    if message.chat.id == admin_id:
+        markup.add(KeyboardButton("Broadcast"))
 
-if message.chat.id == admin_id:
-    markup.add(KeyboardButton("Broadcast"))
-
-bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
+    # Send message with keyboard
+    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
 
 @bot.message_handler(commands=['Help'])
 def send_help(message):
