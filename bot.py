@@ -83,12 +83,16 @@ def delete_channel(message):
     except:
         bot.send_message(message.chat.id, "Invalid selection.")
 
+user_posts = {}  # 🛠 Fix: Initialize the dictionary
+
 @bot.message_handler(func=lambda message: message.text == "Create Post")
 def create_post(message):
     bot.send_message(message.chat.id, "Send me the text or media (photo/video) for the post.")
     bot.register_next_step_handler(message, save_post)
 
 def save_post(message):
+    global user_posts  # 🛠 Fix: Use global to modify the dictionary
+
     if message.content_type == "text":
         user_posts[message.chat.id] = {"text": message.text, "media": None, "buttons": []}
     elif message.content_type == "photo":
