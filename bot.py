@@ -22,7 +22,7 @@ welcome_text += "🔹 **/ʀᴇᴍᴏᴠᴇᴄʜᴀɴɴᴇʟ** – ❌ *ᴅᴇʟ�
 welcome_text += "🔹 **/ʜᴇʟᴘ** – 📖 *ɢᴇᴛ ᴀ ꜰᴜʟʟ ɢᴜɪᴅᴇ ᴏɴ ʙᴏᴛ ᴜsᴀɢᴇ!*\n"
 welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
 welcome_text += "🔥 **ᴇxᴘᴇʀɪᴇɴᴄᴇ ᴛʜᴇ ꜰᴀsᴛᴇsᴛ ᴘᴏsᴛɪɴɢ ʙᴏᴛ ᴇᴠᴇʀ!** 🔥"
-    
+
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
 markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
 markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
