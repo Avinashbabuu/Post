@@ -13,7 +13,7 @@ added_channels = []
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    welcome_text = "✨ **ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴜʟᴛɪᴍᴀᴛᴇ ᴘᴏsᴛɪɴɢ ʙᴏᴛ!** 🚀\n\n"
+welcome_text = "✨ **ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴜʟᴛɪᴍᴀᴛᴇ ᴘᴏsᴛɪɴɢ ʙᴏᴛ!** 🚀\n\n"
 welcome_text += "📢 **ᴇꜰꜰᴏʀᴛʟᴇss ᴄʜᴀɴɴᴇʟ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ & ᴘᴏsᴛ ᴄʀᴇᴀᴛɪᴏɴ!**\n"
 welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
 welcome_text += "🔹 **/ᴄʀᴇᴀᴛᴇᴘᴏsᴛ** – ✍️ *ᴄʀᴀꜰᴛ & sᴇɴᴅ ᴇɴɢᴀɢɪɴɢ ᴘᴏsᴛs ᴇꜰꜰᴏʀᴛʟᴇssʟʏ!*\n"
@@ -23,7 +23,7 @@ welcome_text += "🔹 **/ʜᴇʟᴘ** – 📖 *ɢᴇᴛ ᴀ ꜰᴜʟʟ ɢᴜɪ�
 welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
 welcome_text += "🔥 **ᴇxᴘᴇʀɪᴇɴᴄᴇ ᴛʜᴇ ꜰᴀsᴛᴇsᴛ ᴘᴏsᴛɪɴɢ ʙᴏᴛ ᴇᴠᴇʀ!** 🔥"
 
-    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+markup = ReplyKeyboardMarkup(resize_keyboard=True)
 markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
 markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
 
