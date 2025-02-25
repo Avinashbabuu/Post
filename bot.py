@@ -20,6 +20,7 @@ def home_keyboard(user_id):
     return markup
 
 @bot.message_handler(commands=['start'])
+@bot.message_handler(func=lambda message: message.text == "Home")
 def send_welcome(message):
     """Send welcome message with buttons"""
     welcome_text = "✨ **Welcome to the Ultimate Posting Bot!** 🚀\n\n"
@@ -35,6 +36,7 @@ def send_welcome(message):
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=home_keyboard(message.chat.id))
 
 @bot.message_handler(commands=['help'])
+@bot.message_handler(func=lambda message: message.text == "Help")
 def send_help(message):
     """Send help message"""
     help_text = "🚀 **Post Bot Guide** 🚀\n\n"
@@ -48,6 +50,7 @@ def send_help(message):
 
     bot.send_message(message.chat.id, help_text, parse_mode="Markdown", reply_markup=home_keyboard(message.chat.id))
 
+@bot.message_handler(commands=['setchannel'])
 @bot.message_handler(func=lambda message: message.text == "Set Channel")
 def set_channel(message):
     """Ask for channel username or ID"""
@@ -59,6 +62,7 @@ def save_channel(message):
     added_channels.append(message.text)
     bot.send_message(message.chat.id, f"✅ Channel added: {message.text}", reply_markup=home_keyboard(message.chat.id))
 
+@bot.message_handler(commands=['removechannel'])
 @bot.message_handler(func=lambda message: message.text == "Remove Channel")
 def remove_channel(message):
     """List added channels and ask which to remove"""
@@ -79,6 +83,7 @@ def delete_channel(message):
     except:
         bot.send_message(message.chat.id, "Invalid selection.", reply_markup=home_keyboard(message.chat.id))
 
+@bot.message_handler(commands=['createpost'])
 @bot.message_handler(func=lambda message: message.text == "Create Post")
 def create_post(message):
     """Ask user for post content"""
@@ -92,21 +97,31 @@ def save_post(message):
     elif message.content_type == "photo":
         file_id = message.photo[-1].file_id
         user_posts[message.chat.id] = {"text": message.caption or "", "media": file_id, "buttons": []}
-    elif message.content_type == "video":
-        file_id = message.video.file_id
-        user_posts[message.chat.id] = {"text": message.caption or "", "media": file_id, "buttons": []}
     else:
-        bot.send_message(message.chat.id, "⚠️ Unsupported format. Send text, image, or video.", reply_markup=home_keyboard(message.chat.id))
+        bot.send_message(message.chat.id, "⚠️ Unsupported format. Send text or image.", reply_markup=home_keyboard(message.chat.id))
         return
 
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add(KeyboardButton("Add Inline Button"), KeyboardButton("Send Post"), KeyboardButton("Cancel"))
     bot.send_message(message.chat.id, "✅ Post saved. Add a button or send it.", reply_markup=markup)
 
-@bot.message_handler(func=lambda message: message.text == "Cancel")
-def cancel_action(message):
-    """Cancel and go back to home"""
-    bot.send_message(message.chat.id, "❌ Action canceled.", reply_markup=home_keyboard(message.chat.id))
+@bot.message_handler(func=lambda message: message.text == "Add Inline Button")
+def add_button(message):
+    """Ask for button title and link"""
+    bot.send_message(message.chat.id, "Send me the button title and link separated by a comma.\nExample: Google, https://google.com")
+    bot.register_next_step_handler(message, save_button)
+
+def save_button(message):
+    """Save inline button"""
+    try:
+        title, link = message.text.split(", ")
+        if message.chat.id in user_posts:
+            user_posts[message.chat.id]["buttons"].append((title, link))
+            bot.send_message(message.chat.id, f"✅ Button '{title}' added!", reply_markup=home_keyboard(message.chat.id))
+        else:
+            bot.send_message(message.chat.id, "No active post found.", reply_markup=home_keyboard(message.chat.id))
+    except:
+        bot.send_message(message.chat.id, "⚠️ Invalid format. Use: Title, Link", reply_markup=home_keyboard(message.chat.id))
 
 @bot.message_handler(func=lambda message: message.text == "Send Post")
 def send_post(message):
@@ -128,16 +143,8 @@ def send_to_channel(message):
         bot.send_message(message.chat.id, "No active post found.", reply_markup=home_keyboard(message.chat.id))
         return
     
-    if message.text == "Send to All":
-        targets = added_channels
-    else:
-        targets = [message.text]
-
-    for ch in targets:
-        if post["media"]:
-            bot.send_photo(ch, post["media"], caption=post["text"])
-        else:
-            bot.send_message(ch, post["text"])
+    for ch in added_channels if message.text == "Send to All" else [message.text]:
+        bot.send_message(ch, post["text"])
 
     bot.send_message(message.chat.id, "✅ Post sent successfully!", reply_markup=home_keyboard(message.chat.id))
 
