@@ -56,7 +56,7 @@ help_text += "   ➜ 🚫 *ᴅᴇʟᴇᴛᴇ ᴀ ᴄʜᴀɴɴᴇʟ ꜰʀᴏᴍ �
 help_text += "━━━━━━━━━━━━━━━━━━━━━\n"
 help_text += "🔥 **ᴍᴀꜱᴛᴇʀ ᴛʜᴇꜱᴇ ꜰᴇᴀᴛᴜʀᴇꜱ & ʀᴏᴄᴋ ʏᴏᴜʀ ᴘᴏꜱᴛɪɴɢ ɢᴀᴍᴇ!** 🔥"
    
-    bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
+bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
 
 @bot.message_handler(func=lambda message: message.text == "Set Channel")
 def set_channel(message):
