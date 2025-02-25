@@ -1,7 +1,7 @@
 import telebot
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-TOKEN = "8013649463:AAHJHS-KKCZrNP3VaSibuV_qp8sMd7kgf5E"
+TOKEN = "8013649463:AAFAqEoo5FjzWLWjpwHfU9OmrrDzQrVSkMM"
 bot = telebot.TeleBot(TOKEN)
 
 admin_id = 6484788124  # Replace with your Telegram ID
@@ -12,30 +12,29 @@ selected_channel = {}
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    welcome_text = "👋 *Welcome to the bot!* \n\n🚀 *Features:*\n"
-    welcome_text += "1️⃣ *Create Post* - Make & send posts.\n"
-    welcome_text += "2️⃣ *Set/Remove Channel* - Manage your target channel.\n"
-    welcome_text += "3️⃣ *Broadcast* - Send messages to all channels.\n"
-    welcome_text += "4️⃣ *Clone Bot* - Create your own version of this bot.\n"
-    welcome_text += "5️⃣ *Help* - Get a step-by-step guide."
+    welcome_text = "👋 Welcome to the bot! Here are the available features:\n\n"
+    welcome_text += "✅ *Create Post* - Make & send posts.\n"
+    welcome_text += "✅ *Set Channel* - Set a target channel for posting.\n"
+    welcome_text += "✅ *Remove Channel* - Unlink the selected channel.\n"
+    welcome_text += "✅ *Broadcast* - Send messages to all users (Admin Only).\n"
+    welcome_text += "✅ *Help* - Get a full guide."
     
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
     markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
-    markup.add(KeyboardButton("Broadcast"), KeyboardButton("Clone Bot"))
+    markup.add(KeyboardButton("Broadcast"))
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
 
 @bot.message_handler(commands=['help'])
 def send_help(message):
-    help_text = "📌 *Bot Guide:*\n\n"
-    help_text += "🔹 *Create Post* - Create a post with text & images.\n"
-    help_text += "🔹 *Add Inline Button* - Attach buttons to your post.\n"
-    help_text += "🔹 *Send Post* - Post it in your selected channel.\n"
-    help_text += "🔹 *Edit Post* - Modify your post before sending.\n"
-    help_text += "🔹 *Set Channel* - Choose a channel for posting.\n"
-    help_text += "🔹 *Remove Channel* - Unlink the selected channel.\n"
-    help_text += "🔹 *Broadcast* - Send messages to all channels.\n"
-    help_text += "🔹 *Clone Bot* - Duplicate this bot (without admin control & broadcast).\n"
+    help_text = "📌 *Bot Guide* 📌\n\n"
+    help_text += "1️⃣ *Create Post* - Make a new post with image & text.\n"
+    help_text += "2️⃣ *Add Inline Button* - Attach buttons to the post.\n"
+    help_text += "3️⃣ *Send Post* - Post it in your channel.\n"
+    help_text += "4️⃣ *Set Channel* - Choose a channel to send posts.\n"
+    help_text += "5️⃣ *Remove Channel* - Unlink the selected channel.\n"
+    help_text += "6️⃣ *Broadcast* - Send a message to all users (Admin Only)."
+    
     bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
 
 @bot.message_handler(func=lambda message: message.text == "Set Channel")
@@ -51,7 +50,7 @@ def save_channel(message):
 def remove_channel(message):
     if message.chat.id in selected_channel:
         del selected_channel[message.chat.id]
-        bot.send_message(message.chat.id, "❌ Channel removed.")
+        bot.send_message(message.chat.id, "❌ Channel removed successfully.")
     else:
         bot.send_message(message.chat.id, "⚠️ No channel is set.")
 
@@ -63,18 +62,22 @@ def create_post(message):
 def save_post(message):
     user_posts[message.chat.id] = {"text": message.text, "buttons": []}
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(KeyboardButton("Add Inline Button"), KeyboardButton("Send Post"), KeyboardButton("Edit Post"))
-    bot.send_message(message.chat.id, "Post saved. You can add a button, edit, or send the post.", reply_markup=markup)
+    markup.add(KeyboardButton("Add Inline Button"), KeyboardButton("Send Post"))
+    bot.send_message(message.chat.id, "Post saved. Add a button or send the post.", reply_markup=markup)
 
 @bot.message_handler(func=lambda message: message.text == "Add Inline Button")
 def add_button(message):
-    bot.send_message(message.chat.id, "Send me the button text.")
+    bot.send_message(message.chat.id, "Send me the button text and URL (Format: Text - URL)")
     bot.register_next_step_handler(message, save_button)
 
 def save_button(message):
     if message.chat.id in user_posts:
-        user_posts[message.chat.id]["buttons"].append(message.text)
-        bot.send_message(message.chat.id, f"✅ Button '{message.text}' added!")
+        try:
+            text, url = message.text.split(" - ")
+            user_posts[message.chat.id]["buttons"].append((text, url))
+            bot.send_message(message.chat.id, f"✅ Button '{text}' added!")
+        except ValueError:
+            bot.send_message(message.chat.id, "⚠️ Invalid format. Use: Text - URL")
     else:
         bot.send_message(message.chat.id, "⚠️ No active post found.")
 
@@ -82,29 +85,28 @@ def save_button(message):
 def send_post(message):
     if message.chat.id in user_posts:
         post = user_posts[message.chat.id]
-        bot.send_message(message.chat.id, f"📢 *Your Post:*\n{post['text']}\n🔘 Buttons: {', '.join(post['buttons'])}", parse_mode="Markdown")
+        markup = InlineKeyboardMarkup()
+        for text, url in post["buttons"]:
+            markup.add(InlineKeyboardButton(text, url=url))
+        
+        bot.send_message(message.chat.id, post['text'], reply_markup=markup)
         if message.chat.id in selected_channel:
-            bot.send_message(selected_channel[message.chat.id], post['text'])
+            bot.send_message(selected_channel[message.chat.id], post['text'], reply_markup=markup)
+        del user_posts[message.chat.id]
+        send_welcome(message)  # Redirect to home
     else:
         bot.send_message(message.chat.id, "⚠️ No active post found.")
 
-@bot.message_handler(func=lambda message: message.text == "Clone Bot")
-def clone_bot(message):
-    bot.send_message(message.chat.id, "🛠 *Clone Guide:*\n1. Send your bot token.\n2. Bot will be cloned with posting features.\n3. No admin control or broadcasting.", parse_mode="Markdown")
-    bot.register_next_step_handler(message, clone_process)
-
-def clone_process(message):
-    token = message.text
-    bot.send_message(message.chat.id, f"🔄 Cloning bot with token: {token}...\n\n(Note: Admin control & broadcasting are not cloned.)")
-    # Implement cloning logic here
-
 @bot.message_handler(func=lambda message: message.text == "Broadcast")
 def broadcast_message(message):
-    bot.send_message(message.chat.id, "📢 Send me the message you want to broadcast.")
-    bot.register_next_step_handler(message, send_broadcast)
+    if message.chat.id == admin_id:
+        bot.send_message(message.chat.id, "Send me the message you want to broadcast.")
+        bot.register_next_step_handler(message, send_broadcast)
+    else:
+        bot.send_message(message.chat.id, "❌ You are not authorized to use this command.")
 
 def send_broadcast(message):
-    bot.send_message(admin_id, f"🚀 Broadcast sent: {message.text}")
-    # Implement broadcast logic here
+    bot.send_message(admin_id, f"📢 Broadcast sent: {message.text}")
+    # Implement actual broadcast logic here
 
 bot.polling(none_stop=True)
