@@ -24,11 +24,13 @@ welcome_text += "━━━━━━━━━━━━━━━━━━━━━
 welcome_text += "🔥 **ᴇxᴘᴇʀɪᴇɴᴄᴇ ᴛʜᴇ ꜰᴀsᴛᴇsᴛ ᴘᴏsᴛɪɴɢ ʙᴏᴛ ᴇᴠᴇʀ!** 🔥"
     
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
-    markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
-    if message.chat.id == admin_id:
-        markup.add(KeyboardButton("Broadcast"))
-    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
+markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
+markup.add(KeyboardButton("Set Channel"), KeyboardButton("Remove Channel"))
+
+if message.chat.id == admin_id:
+    markup.add(KeyboardButton("Broadcast"))
+
+bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
 
 @bot.message_handler(commands=['Help'])
 def send_help(message):
