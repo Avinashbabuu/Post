@@ -29,6 +29,54 @@ def send_welcome(message):
     welcome_text += "🔥 **Experience the fastest posting bot ever!** 🔥"
 
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=home_keyboard(message.chat.id))
+    
+@bot.message_handler(func=lambda message: message.text == "Set Channel")
+def set_channel(message):
+    """Ask user for channel username"""
+    bot.send_message(message.chat.id, "🔹 Send me your **channel username** (e.g., `@MyChannel`).")
+    bot.register_next_step_handler(message, save_channel)
+
+def save_channel(message):
+    """Save channel for user"""
+    user_id = message.chat.id
+    channel = message.text.strip()
+    
+    if not channel.startswith("@"):
+        bot.send_message(user_id, "⚠️ Invalid format! Channel should start with `@`.")
+        return
+    
+    if user_id not in user_channels:
+        user_channels[user_id] = []
+    
+    user_channels[user_id].append(channel)
+    bot.send_message(user_id, f"✅ **{channel}** has been saved as your posting channel.", reply_markup=home_keyboard(user_id))
+
+@bot.message_handler(func=lambda message: message.text == "Remove Channel")
+def remove_channel(message):
+    """Show list of channels to remove"""
+    user_id = message.chat.id
+    if user_id not in user_channels or not user_channels[user_id]:
+        bot.send_message(user_id, "❌ You have no channels saved.", reply_markup=home_keyboard(user_id))
+        return
+
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    for ch in user_channels[user_id]:
+        markup.add(KeyboardButton(ch))
+    markup.add(KeyboardButton("❌ Cancel"))
+
+    bot.send_message(user_id, "📌 Select the channel to remove:", reply_markup=markup)
+    bot.register_next_step_handler(message, delete_channel)
+
+def delete_channel(message):
+    """Delete selected channel"""
+    user_id = message.chat.id
+    channel = message.text.strip()
+
+    if channel in user_channels.get(user_id, []):
+        user_channels[user_id].remove(channel)
+        bot.send_message(user_id, f"✅ **{channel}** has been removed.", reply_markup=home_keyboard(user_id))
+    else:
+        bot.send_message(user_id, "⚠️ Invalid selection.", reply_markup=home_keyboard(user_id))
 
 @bot.message_handler(func=lambda message: message.text == "Help")
 def show_help(message):
