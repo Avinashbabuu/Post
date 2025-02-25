@@ -1,8 +1,7 @@
-
 import telebot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-TOKEN = "8013649463:AAFAqEoo5FjzWLWjpwHfU9OmrrDzQrVSkMM"
+TOKEN = "8013649463:AAHBlz-hW0YG6qM05pxQo4csKMye-asG2NY"
 bot = telebot.TeleBot(TOKEN)
 
 admin_id = 6484788124  # Replace with your Telegram ID
