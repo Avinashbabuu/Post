@@ -14,15 +14,16 @@ added_channels = []
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     welcome_text = "✨ **ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ ᴜʟᴛɪᴍᴀᴛᴇ ᴘᴏsᴛɪɴɢ ʙᴏᴛ!** 🚀\n\n"
-welcome_text += "📢 **ᴇꜰꜰᴏʀᴛʟᴇss ᴄʜᴀɴɴᴇʟ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ & ᴘᴏsᴛ ᴄʀᴇᴀᴛɪᴏɴ!**\n"
-welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
-welcome_text += "🔹 **/ᴄʀᴇᴀᴛᴇᴘᴏsᴛ** – ✍️ *ᴄʀᴀꜰᴛ & sᴇɴᴅ ᴇɴɢᴀɢɪɴɢ ᴘᴏsᴛs ᴇꜰꜰᴏʀᴛʟᴇssʟʏ!*\n"
-welcome_text += "🔹 **/sᴇᴛᴄʜᴀɴɴᴇʟ** – 📌 *sᴇʟᴇᴄᴛ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ ꜰᴏʀ ᴘᴏsᴛɪɴɢ!*\n"
-welcome_text += "🔹 **/ʀᴇᴍᴏᴠᴇᴄʜᴀɴɴᴇʟ** – ❌ *ᴅᴇʟᴇᴛᴇ ᴀɴʏ ᴀᴅᴅᴇᴅ ᴄʜᴀɴɴᴇʟ!*\n"
-welcome_text += "🔹 **/ʜᴇʟᴘ** – 📖 *ɢᴇᴛ ᴀ ꜰᴜʟʟ ɢᴜɪᴅᴇ ᴏɴ ʙᴏᴛ ᴜsᴀɢᴇ!*\n"
-welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
-welcome_text += "🔥 **ᴇxᴘᴇʀɪᴇɴᴄᴇ ᴛʜᴇ ꜰᴀsᴛᴇsᴛ ᴘᴏsᴛɪɴɢ ʙᴏᴛ ᴇᴠᴇʀ!** 🔥"
-   bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
+    welcome_text += "📢 **ᴇꜰꜰᴏʀᴛʟᴇss ᴄʜᴀɴɴᴇʟ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ & ᴘᴏsᴛ ᴄʀᴇᴀᴛɪᴏɴ!**\n"
+    welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
+    welcome_text += "🔹 **/ᴄʀᴇᴀᴛᴇᴘᴏsᴛ** – ✍️ *ᴄʀᴀꜰᴛ & sᴇɴᴅ ᴇɴɢᴀɢɪɴɢ ᴘᴏsᴛs ᴇꜰꜰᴏʀᴛʟᴇssʟʏ!*\n"
+    welcome_text += "🔹 **/sᴇᴛᴄʜᴀɴɴᴇʟ** – 📌 *sᴇʟᴇᴄᴛ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ ꜰᴏʀ ᴘᴏsᴛɪɴɢ!*\n"
+    welcome_text += "🔹 **/ʀᴇᴍᴏᴠᴇᴄʜᴀɴɴᴇʟ** – ❌ *ᴅᴇʟᴇᴛᴇ ᴀɴʏ ᴀᴅᴅᴇᴅ ᴄʜᴀɴɴᴇʟ!*\n"
+    welcome_text += "🔹 **/ʜᴇʟᴘ** – 📖 *ɢᴇᴛ ᴀ ꜰᴜʟʟ ɢᴜɪᴅᴇ ᴏɴ ʙᴏᴛ ᴜsᴀɢᴇ!*\n"
+    welcome_text += "━━━━━━━━━━━━━━━━━━━━━\n"
+    welcome_text += "🔥 **ᴇxᴘᴇʀɪᴇɴᴄᴇ ᴛʜᴇ ꜰᴀsᴛᴇsᴛ ᴘᴏsᴛɪɴɢ ʙᴏᴛ ᴇᴠᴇʀ!** 🔥"
+
+    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
 
 markup = ReplyKeyboardMarkup(resize_keyboard=True)
 markup.add(KeyboardButton("Create Post"), KeyboardButton("Help"))
