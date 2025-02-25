@@ -30,31 +30,31 @@ def send_welcome(message):
     # Send message with keyboard
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
 
-@bot.message_handler(commands=['Help'])
+@bot.message_handler(commands=['help'])  # Command should be lowercase
 def send_help(message):
     help_text = "╔═══════════════╗\n"
-help_text += "  🚀 **ᴘᴏꜱᴛ ʙᴏᴛ ɢᴜɪᴅᴇ** 🚀\n"
-help_text += "╚═══════════════╝\n\n"
+    help_text += "  🚀 **ᴘᴏꜱᴛ ʙᴏᴛ ɢᴜɪᴅᴇ** 🚀\n"
+    help_text += "╚═══════════════╝\n\n"
 
-help_text += "📝 **ᴄʀᴇᴀᴛᴇ ᴘᴏꜱᴛ**\n"
-help_text += "   ➜ ✍️ *ᴍᴀᴋᴇ ᴀ ꜱᴛʏʟɪꜱʜ ᴘᴏꜱᴛ ᴡɪᴛʜ ɪᴍᴀɢᴇꜱ & ᴛᴇxᴛ!*\n\n"
+    help_text += "📝 **ᴄʀᴇᴀᴛᴇ ᴘᴏꜱᴛ**\n"
+    help_text += "   ➜ ✍️ *ᴍᴀᴋᴇ ᴀ ꜱᴛʏʟɪꜱʜ ᴘᴏꜱᴛ ᴡɪᴛʜ ɪᴍᴀɢᴇꜱ & ᴛᴇxᴛ!*\n\n"
 
-help_text += "🔘 **ᴀᴅᴅ ɪɴʟɪɴᴇ ʙᴜᴛᴛᴏɴꜱ**\n"
-help_text += "   ➜ 🔗 *ᴀᴛᴛᴀᴄʜ ʟɪɴᴋ ʙᴜᴛᴛᴏɴꜱ ᴛᴏ ᴘᴏꜱᴛ!*\n\n"
+    help_text += "🔘 **ᴀᴅᴅ ɪɴʟɪɴᴇ ʙᴜᴛᴛᴏɴꜱ**\n"
+    help_text += "   ➜ 🔗 *ᴀᴛᴛᴀᴄʜ ʟɪɴᴋ ʙᴜᴛᴛᴏɴꜱ ᴛᴏ ᴘᴏꜱᴛ!*\n\n"
 
-help_text += "📢 **ꜱᴇɴᴅ ᴘᴏꜱᴛ**\n"
-help_text += "   ➜ 🚀 *ᴄʜᴏᴏꜱᴇ ᴄʜᴀɴɴᴇʟ & ᴘᴜʙʟɪꜱʜ ʏᴏᴜʀ ᴘᴏꜱᴛ!*\n\n"
+    help_text += "📢 **ꜱᴇɴᴅ ᴘᴏꜱᴛ**\n"
+    help_text += "   ➜ 🚀 *ᴄʜᴏᴏꜱᴇ ᴄʜᴀɴɴᴇʟ & ᴘᴜʙʟɪꜱʜ ʏᴏᴜʀ ᴘᴏꜱᴛ!*\n\n"
 
-help_text += "📌 **ꜱᴇᴛ ᴄʜᴀɴɴᴇʟ**\n"
-help_text += "   ➜ 🎯 *ꜱᴇʟᴇᴄᴛ ᴀ ᴄʜᴀɴɴᴇʟ ꜰᴏʀ ꜰᴜᴛᴜʀᴇ ᴘᴏꜱᴛꜱ!*\n\n"
+    help_text += "📌 **ꜱᴇᴛ ᴄʜᴀɴɴᴇʟ**\n"
+    help_text += "   ➜ 🎯 *ꜱᴇʟᴇᴄᴛ ᴀ ᴄʜᴀɴɴᴇʟ ꜰᴏʀ ꜰᴜᴛᴜʀᴇ ᴘᴏꜱᴛꜱ!*\n\n"
 
-help_text += "❌ **ʀᴇᴍᴏᴠᴇ ᴄʜᴀɴɴᴇʟ**\n"
-help_text += "   ➜ 🚫 *ᴅᴇʟᴇᴛᴇ ᴀ ᴄʜᴀɴɴᴇʟ ꜰʀᴏᴍ ᴛʜᴇ ʟɪꜱᴛ!*\n\n"
+    help_text += "❌ **ʀᴇᴍᴏᴠᴇ ᴄʜᴀɴɴᴇʟ**\n"
+    help_text += "   ➜ 🚫 *ᴅᴇʟᴇᴛᴇ ᴀ ᴄʜᴀɴɴᴇʟ ꜰʀᴏᴍ ᴛʜᴇ ʟɪꜱᴛ!*\n\n"
 
-help_text += "━━━━━━━━━━━━━━━━━━━━━\n"
-help_text += "🔥 **ᴍᴀꜱᴛᴇʀ ᴛʜᴇꜱᴇ ꜰᴇᴀᴛᴜʀᴇꜱ & ʀᴏᴄᴋ ʏᴏᴜʀ ᴘᴏꜱᴛɪɴɢ ɢᴀᴍᴇ!** 🔥"
-   
-bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
+    help_text += "━━━━━━━━━━━━━━━━━━━━━\n"
+    help_text += "🔥 **ᴍᴀꜱᴛᴇʀ ᴛʜᴇꜱᴇ ꜰᴇᴀᴛᴜʀᴇꜱ & ʀᴏᴄᴋ ʏᴏᴜʀ ᴘᴏꜱᴛɪɴɢ ɢᴀᴍᴇ!** 🔥"
+    
+    bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
 
 @bot.message_handler(func=lambda message: message.text == "Set Channel")
 def set_channel(message):
